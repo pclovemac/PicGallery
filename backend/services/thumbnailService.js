@@ -72,6 +72,7 @@ class ThumbnailService {
             .pipe()
             .pipe(
               sharp()
+                .rotate()
                 .resize(config.thumbnailWidth, config.thumbnailHeight, {
                   fit: 'inside',
                   withoutEnlargement: true,
@@ -85,6 +86,7 @@ class ThumbnailService {
       } else {
         // 原有图片处理逻辑
         await sharp(sourcePath)
+          .rotate()
           .resize(config.thumbnailWidth, config.thumbnailHeight, {
             fit: 'inside',
             withoutEnlargement: true,
