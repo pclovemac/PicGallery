@@ -171,3 +171,12 @@ export async function toggleBlockFile(filename) {
   }
   return res.json();
 }
+
+/**
+ * 清除所有物理缩略图缓存
+ */
+export async function clearThumbnailCache() {
+  return authFetch(`${API_BASE}/settings/cache`, {
+    method: 'DELETE',
+  });
+}

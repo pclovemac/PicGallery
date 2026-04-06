@@ -53,4 +53,21 @@ router.post('/block', requireAdmin, async (req, res) => {
   }
 });
 
+/**
+ * DELETE /api/settings/cache
+ * 清空并重建完整的缩略图物理缓存库
+ */
+router.delete('/cache', requireAdmin, async (req, res) => {
+  try {
+    const fs = await import('fs/promises');
+    const config = (await import('../config.js')).default;
+    await fs.rm(config.thumbnailsDir, { recursive: true, force: true });
+    await fs.mkdir(config.thumbnailsDir, { recursive: true });
+    res.json({ message: '缓存已全部清空，将在刷新后重新生成正向缩略图' });
+  } catch (err) {
+    console.error('清空缓存失败:', err);
+    res.status(500).json({ error: '清除缩略图缓存失败' });
+  }
+});
+
 export default router;

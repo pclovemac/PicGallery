@@ -30,12 +30,15 @@ const translations = {
     "admin.subtitle": "照片存放路径与管理员凭证",
     "admin.pathLabel": "NAS 挂载目录 (绝对路径)",
     "admin.userLabel": "管理员登录账号",
-    "admin.pwdLabel": "管理员登录密码",
+    "admin.pwdLabel": "管理员密码设定 (直接修改)",
     "admin.pwdPlaceholder": "默认值 admin123",
     "admin.cancel": "取消",
-    "admin.submit": "提交修改",
+    "admin.submit": "保存配置",
     "admin.saving": "保存中...",
-    "admin.success": "设置保存成功",
+    "admin.dangerZone": "危险操作区",
+    "admin.clearCache": "清空缩略图缓存 (修复方向/错位)",
+    "admin.confirmClearCache": "这将会立即抹除所有已经生成的正方形缩略图！重新生成可能需要消耗设备 CPU。是否继续？",
+    "admin.success": "配置已保存成功！",
 
     // App Toasts & messages
     "app.deleted": "已删除 {filename}",
@@ -88,9 +91,12 @@ const translations = {
     "admin.pwdLabel": "Admin Password",
     "admin.pwdPlaceholder": "Default: admin123",
     "admin.cancel": "Cancel",
-    "admin.submit": "Submit Changes",
+    "admin.submit": "Save Settings",
     "admin.saving": "Saving...",
-    "admin.success": "Settings saved successfully",
+    "admin.dangerZone": "Danger Zone",
+    "admin.clearCache": "Clear Thumbnails Cache (Fix Rotation)",
+    "admin.confirmClearCache": "This will aggressively wipe all locally generated thumbnails! The server will regenerate them at high CPU usage on your next browsing. Continue?",
+    "admin.success": "Settings saved successfully!",
 
     // App Toasts & messages
     "app.deleted": "Deleted {filename}",

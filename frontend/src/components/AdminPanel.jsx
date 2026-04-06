@@ -12,6 +12,20 @@ export default function AdminPanel({ onClose, onToast, onSettingsChanged }) {
     adminPassword: ''
   });
 
+  const handleClearCache = async () => {
+    if (!window.confirm(t('admin.confirmClearCache'))) return;
+    setSaving(true);
+    try {
+      const { clearThumbnailCache } = await import('../api');
+      const res = await clearThumbnailCache();
+      onToast(res.message || 'Cache Cleared', 'success');
+    } catch (err) {
+      onToast(err.message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   useEffect(() => {
     const loadConfig = async () => {
       try {
@@ -96,7 +110,20 @@ export default function AdminPanel({ onClose, onToast, onSettingsChanged }) {
               />
             </div>
             
-            <div className="modal-actions">
+            <div className="form-group" style={{ marginTop: '20px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+              <label className="form-label">{t('admin.dangerZone')}</label>
+              <button 
+                type="button" 
+                className="btn btn-danger" 
+                onClick={handleClearCache} 
+                disabled={saving}
+                style={{ width: '100%' }}
+              >
+                🗑️ {t('admin.clearCache')}
+              </button>
+            </div>
+            
+            <div className="modal-actions" style={{ marginTop: '30px' }}>
               <button type="button" className="btn btn-ghost" onClick={onClose} disabled={saving}>
                 {t('admin.cancel')}
               </button>
