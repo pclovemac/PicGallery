@@ -98,29 +98,6 @@ export default function Header({ totalImages, totalVideos, sort, filter, year, a
         )}
       </div>
       </header>
-
-      {/* 二级菜单：年份导航栏 */}
-      {availableYears && availableYears.length > 0 && (
-        <div className="sub-header">
-          <div className="year-menu">
-            <button
-              className={`sort-btn ${year === 'all' ? 'active' : ''}`}
-              onClick={() => onYearChange('all')}
-            >
-              {t('header.allYears')}
-            </button>
-            {availableYears.map(y => (
-              <button
-                key={y}
-                className={`sort-btn ${year == y ? 'active' : ''}`}
-                onClick={() => onYearChange(y.toString())}
-              >
-                {y}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </>
   );
 }

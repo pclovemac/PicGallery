@@ -8,6 +8,7 @@ import LoginModal from './components/LoginModal';
 import AdminPanel from './components/AdminPanel';
 import UploadZone from './components/UploadZone';
 import Sidebar from './components/Sidebar';
+import YearNav from './components/YearNav';
 import { fetchImages, deleteImage } from './api';
 
 function ToastContainer({ toasts, onRemove }) {
@@ -128,11 +129,8 @@ function AppContent() {
         totalVideos={totalVideos}
         sort={sort}
         filter={filter}
-        year={year}
-        availableYears={availableYears}
         onSortChange={setSort}
         onFilterChange={setFilter}
-        onYearChange={setYear}
         onSettingsClick={() => setShowAdminPanel(true)}
         onLoginClick={() => setShowLogin(true)}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
@@ -154,6 +152,11 @@ function AppContent() {
         />
 
         <main className="gallery-content">
+          <YearNav 
+            year={year} 
+            availableYears={availableYears} 
+            onYearChange={setYear} 
+          />
           <Gallery
             images={images}
             loading={loading}
