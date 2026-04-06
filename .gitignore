@@ -1,0 +1,27 @@
+# 常规日志与编辑器挂载
+logs
+*.log
+.DS_Store
+.vscode/
+
+# 依赖池
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# 编译缓存与构建物
+dist/
+build/
+.thumbnails/
+
+# 本端环境文件与生产密钥
+.env
+.env.local
+
+# 数据库、挂载图库以及照片存放点 (保障不在推库时污染本地云端资产)
+photos/
+backend/data/
+
+# 可选缩略图测试残留
+temp/
+coverage/
