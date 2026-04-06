@@ -102,17 +102,25 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding: var(--space-md);
+  gap: var(--space-md);
 }
 
 .main-layout {
   display: flex;
   flex: 1;
   position: relative;
+  gap: var(--space-md);
 }
 
 .gallery-content {
   flex: 1;
   position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
 }
 
 /* 自定义滚动条 */
@@ -135,12 +143,13 @@ body {
    ================================ */
 .header {
   position: sticky;
-  top: 0;
+  top: var(--space-md);
   z-index: 100;
   background: var(--bg-glass);
   backdrop-filter: var(--blur-md);
   -webkit-backdrop-filter: var(--blur-md);
-  border-bottom: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: var(--space-md) var(--space-xl);
   display: flex;
   align-items: center;
@@ -995,12 +1004,14 @@ body {
    ================================ */
 .sub-header {
   position: sticky;
-  top: 73px; /* 紧贴主 Header */
+  top: calc(73px + 2 * var(--space-md));
   z-index: 90;
   background: var(--bg-glass);
   backdrop-filter: var(--blur-md);
   -webkit-backdrop-filter: var(--blur-md);
   border-bottom: 1px solid var(--border);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
   padding: var(--space-sm) var(--space-xl);
   display: flex;
   align-items: center;
@@ -1028,12 +1039,13 @@ body {
   width: 240px;
   flex-shrink: 0;
   background: var(--bg-surface);
-  border-right: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 73px;
-  height: calc(100vh - 73px);
+  top: calc(73px + 2 * var(--space-md));
+  height: calc(100vh - 73px - 3 * var(--space-md));
   z-index: 90;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1115,12 +1127,41 @@ body {
   .sidebar-overlay.open {
     display: block;
     position: fixed;
-    top: 73px;
+    top: calc(73px + var(--space-md));
     left: 0;
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 80;
     backdrop-filter: blur(2px);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 0;
+    gap: 0;
+  }
+  .header {
+    top: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+  .sidebar { 
+    top: 73px; 
+    border-radius: 0; 
+  }
+  .sub-header { 
+    top: 73px; 
+    border-radius: 0; 
+  }
+  .gallery-content { 
+    border-radius: 0; 
+    border: none;
+  }
+  .main-layout {
+    gap: 0;
   }
 }
