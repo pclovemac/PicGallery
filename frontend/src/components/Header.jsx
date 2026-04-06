@@ -84,9 +84,6 @@ export default function Header({ totalImages, totalVideos, sort, filter, year, a
           </>
         ) : (
           <>
-            <button className="btn btn-icon btn-ghost" onClick={onRefresh} title={t('header.refresh')}>
-              🔄
-            </button>
             <button className="btn btn-icon btn-ghost" onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')} title="Toggle Language">
               🌐
             </button>
