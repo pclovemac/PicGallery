@@ -7,6 +7,7 @@ import ImageViewer from './components/ImageViewer';
 import LoginModal from './components/LoginModal';
 import AdminPanel from './components/AdminPanel';
 import UploadZone from './components/UploadZone';
+import Sidebar from './components/Sidebar';
 import { fetchImages, deleteImage } from './api';
 
 function ToastContainer({ toasts, onRemove }) {
@@ -39,9 +40,12 @@ function AppContent() {
   const [filter, setFilter] = useState('all');
   const [year, setYear] = useState('all');
   const [availableYears, setAvailableYears] = useState([]);
+  const [folder, setFolder] = useState('all');
+  const [availableFolders, setAvailableFolders] = useState([]);
   const [viewerImage, setViewerImage] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const toastIdRef = useRef(0);
 
@@ -58,15 +62,16 @@ function AppContent() {
     }, 3300);
   }, []);
 
-  const loadImages = useCallback(async (pageNum, sortOrder, filterType, yearFilter, append = false) => {
+  const loadImages = useCallback(async (pageNum, sortOrder, filterType, yearFilter, folderFilter, append = false) => {
     setLoading(true);
     try {
-      const data = await fetchImages(pageNum, 50, sortOrder, filterType, yearFilter);
+      const data = await fetchImages(pageNum, 50, sortOrder, filterType, yearFilter, folderFilter);
       setImages(prev => append ? [...prev, ...data.images] : data.images);
       setTotalPages(data.pagination.totalPages);
       setTotalImages(data.pagination.imageCount);
       setTotalVideos(data.pagination.videoCount);
       setAvailableYears(data.pagination.availableYears || []);
+      setAvailableFolders(data.pagination.availableFolders || []);
     } catch (err) {
       addToast(err.message, 'error');
     } finally {
@@ -76,16 +81,16 @@ function AppContent() {
 
   useEffect(() => {
     setPage(1);
-    loadImages(1, sort, filter, year, false);
-  }, [sort, filter, year, loadImages]);
+    loadImages(1, sort, filter, year, folder, false);
+  }, [sort, filter, year, folder, loadImages]);
 
   const handleLoadMore = useCallback(() => {
     if (page < totalPages) {
       const nextPage = page + 1;
       setPage(nextPage);
-      loadImages(nextPage, sort, filter, year, true);
+      loadImages(nextPage, sort, filter, year, folder, true);
     }
-  }, [page, totalPages, sort, filter, year, loadImages]);
+  }, [page, totalPages, sort, filter, year, folder, loadImages]);
 
   const handleSortChange = useCallback((newSort) => {
     setSort(newSort);
@@ -108,11 +113,16 @@ function AppContent() {
 
   const handleUploaded = useCallback(() => {
     setPage(1);
-    loadImages(1, sort, filter, year, false);
-  }, [sort, filter, year, loadImages]);
+    loadImages(1, sort, filter, year, folder, false);
+  }, [sort, filter, year, folder, loadImages]);
+
+  const handleRefresh = useCallback(() => {
+    setPage(1);
+    loadImages(1, sort, filter, year, folder, false);
+  }, [sort, filter, year, folder, loadImages]);
 
   return (
-    <>
+    <div className="app-container">
       <Header
         totalImages={totalImages}
         totalVideos={totalVideos}
@@ -125,17 +135,36 @@ function AppContent() {
         onYearChange={setYear}
         onSettingsClick={() => setShowAdminPanel(true)}
         onLoginClick={() => setShowLogin(true)}
+        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        onRefresh={handleRefresh}
       />
 
-      <Gallery
-        images={images}
-        loading={loading}
-        hasMore={page < totalPages}
-        onLoadMore={handleLoadMore}
-        onImageClick={setViewerImage}
-        onDelete={handleDelete}
-        onBlockChanged={handleBlockChanged}
-      />
+      <div className="main-layout">
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          folder={folder}
+          availableFolders={availableFolders}
+          onFolderChange={(newFolder) => {
+            setFolder(newFolder);
+            if (window.innerWidth <= 768) {
+              setSidebarOpen(false);
+            }
+          }}
+        />
+
+        <main className="gallery-content">
+          <Gallery
+            images={images}
+            loading={loading}
+            hasMore={page < totalPages}
+            onLoadMore={handleLoadMore}
+            onImageClick={setViewerImage}
+            onDelete={handleDelete}
+            onBlockChanged={handleBlockChanged}
+          />
+        </main>
+      </div>
 
       {viewerImage && (
         <ImageViewer
@@ -169,7 +198,7 @@ function AppContent() {
         toasts={toasts}
         onRemove={(id) => setToasts(prev => prev.filter(t => t.id !== id))}
       />
-    </>
+    </div>
   );
 }
 

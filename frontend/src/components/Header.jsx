@@ -1,7 +1,7 @@
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
 
-export default function Header({ totalImages, totalVideos, sort, filter, year, availableYears, onSortChange, onFilterChange, onYearChange, onSettingsClick, onLoginClick }) {
+export default function Header({ totalImages, totalVideos, sort, filter, year, availableYears, onSortChange, onFilterChange, onYearChange, onSettingsClick, onLoginClick, onToggleSidebar, onRefresh }) {
   const { isAdmin, logout } = useAuth();
   const { t, language, setLanguage } = useTranslation();
 
@@ -9,6 +9,9 @@ export default function Header({ totalImages, totalVideos, sort, filter, year, a
     <>
       <header className="header">
         <div className="header-brand">
+        <button className="btn-icon hamburger-btn" onClick={onToggleSidebar} aria-label="Toggle Sidebar">
+          ☰
+        </button>
         <span className="header-logo">🖼️</span>
         <h1 className="header-title">PicGallery</h1>
         {(totalImages > 0 || totalVideos > 0) && (
@@ -66,6 +69,9 @@ export default function Header({ totalImages, totalVideos, sort, filter, year, a
 
         {isAdmin ? (
           <>
+            <button className="btn btn-ghost" onClick={onRefresh} title={t('header.refresh')}>
+              🔄 {t('header.refresh')}
+            </button>
             <button className="btn btn-ghost" onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')} title="Toggle Language">
               🌐 {language === 'zh' ? 'En' : '中'}
             </button>
@@ -78,6 +84,9 @@ export default function Header({ totalImages, totalVideos, sort, filter, year, a
           </>
         ) : (
           <>
+            <button className="btn btn-icon btn-ghost" onClick={onRefresh} title={t('header.refresh')}>
+              🔄
+            </button>
             <button className="btn btn-icon btn-ghost" onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')} title="Toggle Language">
               🌐
             </button>

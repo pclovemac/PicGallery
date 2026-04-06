@@ -42,6 +42,10 @@ const upload = multer({
  * 获取图片列表（分页）
  */
 router.get('/', optionalAuth, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   try {
     const page = Math.max(1, parseInt(req.query.page || '1', 10));
     const limit = Math.min(200, Math.max(1, parseInt(req.query.limit || String(config.defaultPageSize), 10)));
@@ -82,21 +86,36 @@ router.get('/', optionalAuth, async (req, res) => {
 
     // 计算所有可用的年份（提取离散集合）
     const availableYearsSet = new Set();
+    const availableFoldersSet = new Set();
     fileInfosRaw.forEach(f => {
       if (f.mtime > 0) {
         const year = new Date(f.mtime).getFullYear();
         if (!isNaN(year)) availableYearsSet.add(year);
       }
+      
+      const parts = f.name.replace(/\\/g, '/').split('/');
+      if (parts.length > 1) {
+        availableFoldersSet.add(parts[0]);
+      }
     });
     const availableYears = Array.from(availableYearsSet).sort((a, b) => b - a);
+    const availableFolders = Array.from(availableFoldersSet).sort();
 
     // 执行按年过滤
     const yearFilter = req.query.year;
     let fileInfos = fileInfosRaw;
     if (yearFilter && yearFilter !== 'all') {
       const targetYear = parseInt(yearFilter, 10);
-      fileInfos = fileInfosRaw.filter(f => {
+      fileInfos = fileInfos.filter(f => {
         return f.mtime > 0 && new Date(f.mtime).getFullYear() === targetYear;
+      });
+    }
+
+    // 执行按目录专辑过滤
+    const folderFilter = req.query.folder;
+    if (folderFilter && folderFilter !== 'all') {
+      fileInfos = fileInfos.filter(f => {
+        return f.name.replace(/\\/g, '/').startsWith(folderFilter + '/');
       });
     }
 
@@ -155,7 +174,8 @@ router.get('/', optionalAuth, async (req, res) => {
         totalPages,
         imageCount: totalImagesCount,
         videoCount: totalVideosCount,
-        availableYears
+        availableYears,
+        availableFolders
       },
     });
   } catch (err) {

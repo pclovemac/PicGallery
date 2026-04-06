@@ -12,6 +12,8 @@ const translations = {
     "header.sortOldest": "最早",
     "header.sortName": "名称排序",
     "header.allYears": "全部年份",
+    "header.allFolders": "全部分类",
+    "header.refresh": "重新检索",
     "header.adminMode": "🔓 管理中",
     "header.settings": "⚙️ 设置",
     
@@ -65,6 +67,8 @@ const translations = {
     "header.sortOldest": "Oldest",
     "header.sortName": "Sort Name",
     "header.allYears": "All Years",
+    "header.allFolders": "All Albums",
+    "header.refresh": "Rescan",
     "header.adminMode": "🔓 Mgmt Mode",
     "header.settings": "⚙️ Settings",
     

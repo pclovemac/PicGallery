@@ -98,6 +98,23 @@ body {
   flex-direction: column;
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.gallery-content {
+  flex: 1;
+  position: relative;
+}
+
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
   width: 6px;
@@ -1002,4 +1019,108 @@ body {
   border-radius: var(--radius-md);
   padding: 3px;
   flex-wrap: nowrap;
+}
+
+/* ================================
+   左侧菜单相册与折叠遮罩
+   ================================ */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 73px;
+  height: calc(100vh - 73px);
+  z-index: 90;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-header {
+  padding: var(--space-md) var(--space-xl);
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-sm) 0;
+}
+
+.folder-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.folder-item {
+  padding: var(--space-sm) var(--space-xl);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folder-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.folder-item.active {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-color);
+  border-right: 3px solid var(--primary-color);
+  font-weight: 500;
+}
+
+.hamburger-btn {
+  display: none; /* Desktop default */
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: inline-flex;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 73px; /* 沉于 header 之下 */
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: var(--bg-glass);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay.open {
+    display: block;
+    position: fixed;
+    top: 73px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 80;
+    backdrop-filter: blur(2px);
+  }
 }

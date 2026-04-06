@@ -60,8 +60,8 @@ export async function verifyToken() {
 /**
  * 获取图片列表
  */
-export async function fetchImages(page = 1, limit = 50, sort = 'newest', filter = 'all', year = 'all') {
-  const res = await fetch(`${API_BASE}/images?page=${page}&limit=${limit}&sort=${sort}&filter=${filter}&year=${year}`);
+export async function fetchImages(page = 1, limit = 50, sort = 'newest', filter = 'all', year = 'all', folder = 'all') {
+  const res = await fetch(`${API_BASE}/images?page=${page}&limit=${limit}&sort=${sort}&filter=${filter}&year=${year}&folder=${folder}`);
   if (!res.ok) throw new Error('获取图片列表失败');
   return res.json();
 }
