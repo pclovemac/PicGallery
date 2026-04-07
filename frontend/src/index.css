@@ -77,23 +77,23 @@
   padding: 0;
 }
 
-html {
+html, body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
   font-family: var(--font-sans);
   background: var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
   line-height: 1.6;
-  overflow-x: hidden;
 }
 
 #root {
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -101,26 +101,30 @@ body {
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
   padding: var(--space-md);
   gap: var(--space-md);
+  overflow: hidden;
 }
 
 .main-layout {
   display: flex;
   flex: 1;
+  min-height: 0; /* 允许 flex 子项收缩不撑破父容器 */
   position: relative;
   gap: var(--space-md);
 }
 
 .gallery-content {
   flex: 1;
+  min-height: 0;
   position: relative;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* 滚动在这里发生，而非 body */
 }
 
 /* 自定义滚动条 */
@@ -142,8 +146,6 @@ body {
    Header
    ================================ */
 .header {
-  position: sticky;
-  top: var(--space-md);
   z-index: 100;
   background: var(--bg-glass);
   backdrop-filter: var(--blur-md);
@@ -151,6 +153,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-md) var(--space-xl);
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1004,19 +1007,18 @@ body {
    ================================ */
 .sub-header {
   position: sticky;
-  top: calc(73px + 2 * var(--space-md));
+  top: 0; /* 相对于 gallery-content 这个内部滚动容器的顶部 */
   z-index: 90;
   background: var(--bg-glass);
   backdrop-filter: var(--blur-md);
   -webkit-backdrop-filter: var(--blur-md);
   border-bottom: 1px solid var(--border);
-  border-top-left-radius: var(--radius-lg);
-  border-top-right-radius: var(--radius-lg);
   padding: var(--space-sm) var(--space-xl);
   display: flex;
   align-items: center;
   overflow-x: auto;
   gap: var(--space-md);
+  flex-shrink: 0;
 }
 
 .sub-header::-webkit-scrollbar {
@@ -1043,11 +1045,8 @@ body {
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: calc(73px + 2 * var(--space-md));
-  height: calc(100vh - 73px - 3 * var(--space-md));
-  z-index: 90;
   overflow: hidden;
+  min-height: 0;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1113,60 +1112,55 @@ body {
   .hamburger-btn {
     display: inline-flex;
   }
-  
-  .sidebar {
-    position: fixed;
-    top: 73px; /* 沉于 header 之下 */
-    bottom: 0;
-    left: 0;
-    transform: translateX(-100%);
-    background: var(--bg-glass);
-    backdrop-filter: var(--blur-lg);
-    -webkit-backdrop-filter: var(--blur-lg);
-  }
-  
-  .sidebar.open {
-    transform: translateX(0);
-  }
-  
-  .sidebar-overlay.open {
-    display: block;
-    position: fixed;
-    top: calc(73px + var(--space-md));
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 80;
-    backdrop-filter: blur(2px);
-  }
-}
 
-@media (max-width: 768px) {
   .app-container {
     padding: 0;
     gap: 0;
+    height: 100vh; /* 小屏上保持 100vh */
+  }
+  .main-layout {
+    gap: 0;
   }
   .header {
-    top: 0;
     border-radius: 0;
     border-left: none;
     border-right: none;
     border-top: none;
+    flex-shrink: 0;
   }
-  .sidebar { 
-    top: 73px; 
-    border-radius: 0; 
-  }
-  .sub-header { 
-    top: 73px; 
-    border-radius: 0; 
-  }
-  .gallery-content { 
-    border-radius: 0; 
+  .gallery-content {
+    border-radius: 0;
     border: none;
   }
-  .main-layout {
-    gap: 0;
+  .sub-header {
+    border-radius: 0;
+  }
+
+  /* 移动端侧边栏改为 fixed 浮层抓屉式 */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 0;
+    transform: translateX(-100%);
+    background: var(--bg-glass);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    z-index: 200;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.open {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 180;
+    backdrop-filter: blur(2px);
   }
 }
